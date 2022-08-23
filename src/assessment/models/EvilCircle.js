@@ -5,31 +5,23 @@ class EvilCircle extends Shape {
     super(x, y, 20, 20);
     this.color = "red";
     this.size = 30;
+    this.life = false;
 
-    window.addEventListener('keydown', (e) => {
-        switch(e.key) {
-          case 'a':
-            this.x -= this.velX;
-            break;
-          case 'd':
-            this.x += this.velX;
-            break;
-          case 'w':
-            this.y -= this.velY;
-            break;
-          case 's':
-            this.y += this.velY;
-            break;
-        }
+    setTimeout(() => this.life = true, 2000);
+
+    window.addEventListener('mousemove', (e) => {
+      const {x, y} = e
+      this.x = x;
+      this.y = y;
       });
   }
 
   draw(ctx) {
     ctx.beginPath();
     ctx.lineWidth = 3;
-    ctx.strokeStyle = this.color;
+    ctx.fillStyle = this.color;
     ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
-    ctx.stroke();
+    ctx.fill();
   }
 
   checkBounds(screenWidth, screenHeight) {
@@ -53,7 +45,7 @@ class EvilCircle extends Shape {
 
   collisionDetect(balls, collisionDetectAction) {
     for (const ball of balls) {
-      if (ball.exists) {
+      if (ball.exists && this.life) {
         const dx = this.x - ball.x;
         const dy = this.y - ball.y;
         const distance = Math.sqrt(dx * dx + dy * dy);

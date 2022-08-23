@@ -7,6 +7,7 @@ import { random, randomRGB } from "./utils/index.js";
 
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
+const gameover = document.querySelector("#game-over")
 
 const width = (canvas.width = window.innerWidth);
 const height = (canvas.height = window.innerHeight);
@@ -22,7 +23,7 @@ const evilCircle = new EvilCircle(30, 30);
 // Animating the ball
 const balls = [];
 
-while (balls.length < 25) {
+while (balls.length < 10) {
   const size = random(10, 20);
   const ball = new Ball(
     // ball position always drawn at least one ball width
@@ -53,13 +54,24 @@ function render() {
 
     evilCircle.draw(ctx);
     evilCircle.checkBounds(width, height);
-    evilCircle.collisionDetect(balls, () =>  counter.decrement())
+    evilCircle.collisionDetect(balls, () =>  gameOver())
   }
 
   //requestAnimationFrame(loop);
 }
 
-let fps = 60;
+function cleanBalls() {
+  for (const ball of balls) {
+    ball.exists = false;
+  }
+}
+
+function gameOver(){
+  cleanBalls();
+  gameover.style.display = "flex";
+}
+
+let fps = 120;
 const loop = () => setInterval(render, 1000 / fps);
 
 loop();
